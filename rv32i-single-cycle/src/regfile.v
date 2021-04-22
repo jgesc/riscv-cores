@@ -9,12 +9,14 @@ module RegisterFile
   input   logic [WIDTH-1:0] w_addr,
   input   logic [WIDTH-1:0] in,
   input   logic             we,
+  input   logic             clk,
   output  logic [WIDTH-1:0] out_1,
   output  logic [WIDTH-1:0] out_2
 );
 
   // Register memory
   logic [WIDTH-1:0] r [0:REGNO-1];
+  initial r[0] = 0;
 
   // Memory output
   always @ ( r_addr_1 ) begin
@@ -25,8 +27,9 @@ module RegisterFile
   end
 
   // Write to register
-  always @ ( posedge we ) begin
-    r[w_addr] <= in;
+  always @ ( negedge clk ) begin
+    if(we && w_addr != 0)
+      r[w_addr] <= in;
   end
 
 endmodule
