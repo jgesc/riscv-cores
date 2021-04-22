@@ -1,6 +1,6 @@
 module InstructionController
 (
-  input   logic [31:0]  in
+  input   logic [31:0]  in,
   output  logic [31:0]  r_s1,       // rs1 field
   output  logic [31:0]  r_s2,       // rs2 field
   output  logic [31:0]  r_d,        // rd field
@@ -13,6 +13,9 @@ module InstructionController
   output  logic         cmp_z,      // Comparison from Z flag or ALU output
   output  logic         cmp_inv,    // Invert comparison condition
   output  logic         bra_mode,   // Branching mode
+  output  logic         mem_rw_mode,// Branching mode
+  output  logic         mem_enable, // Branching mode
+  output  logic [2:0]   mem_func    // Branching mode
 );
 
   // Register write sources
@@ -39,11 +42,12 @@ module InstructionController
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= 3'b000; // ALU op
         alu_alt <= 0; // ALU alt
-        imm_out <= {in[31:12], 12{0}}; // Get immediate
+        imm_out <= {in[31:12], 12'b0}; // Get immediate
         bra_mode <= BRA_DISABLE; // Disable branching comparator
         r_w_src <= RW_ALU; // Enable register write
         r_s1 <= 0;
         r_d <= in[11:7];
+        mem_enable <= 0;
       end
 
       // Add upper immediate program counter
@@ -51,34 +55,67 @@ module InstructionController
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= 3'b000; // ALU op
         alu_alt <= 0; // ALU alt
-        imm_out <= {in[31:12], 12{0}}; // Get immediate
+        imm_out <= {in[31:12], 12'b0}; // Get immediate
         bra_mode <= BRA_ALU; // Disable branching comparator
+        mem_enable <= 0;
       end
 
       // Jump and link
       7'b1101111: begin
-        imm_out <= {11{in[31]}, in[19:12], in[20], in[30:25]. in[24:21], 0};
+        imm_out <= {{11{in[31]}}, in[19:12], in[20], in[30:25], in[24:21], 1'b0};
         r_w_src <= RW_PC; // Write from PC'
         r_d <= in[11:7];
         bra_mode <= BRA_JMP;
+        mem_enable <= 0;
       end
 
       // Jump and link relative
-      7'1100111: begin
+      7'b1100111: begin
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= in[14:12]; // ALU op
         alu_alt <= 0; // ALU alt
-        imm_out <= {20{in[31]}, in[31:20]};
+        imm_out <= {{20{in[31]}}, in[31:20]};
         bra_mode <= BRA_ALU; // Jump to result from ALU
         r_w_src <= RW_ALU; // Enable register write
         r_s1 <= in[19:15]; // Registers
         r_d <= in[11:7];
+        mem_enable <= 0;
+      end
+
+      // Memory load
+      7'b0000011: begin
+        alu_imm_b <= 1; // Operand B from immediate
+        alu_op <= 3'b000; // ALU op
+        alu_alt <= 0; // ALU alt
+        imm_out <= {{20{in[31]}}, in[31:20]};
+        bra_mode <= BRA_DISABLE; // Jump to result from ALU
+        r_w_src <= RW_MEM; // Enable register write
+        r_s1 <= in[19:15]; // Registers
+        r_d <= in[11:7];
+        mem_enable <= 1;
+        mem_rw_mode <= 0;
+        mem_func <= in[14:12];
+      end
+
+      // Memory store
+      7'b0100011: begin
+        alu_imm_b <= 1; // Operand B from immediate
+        alu_op <= 3'b000; // ALU op
+        alu_alt <= 0; // ALU alt
+        imm_out <= {{20{in[31]}}, in[31:25], in[11:7]};
+        bra_mode <= BRA_DISABLE; // Jump to result from ALU
+        r_w_src <= RW_MEM; // Enable register write
+        r_s1 <= in[19:15]; // Registers
+        r_s2 <= in[24:20];
+        mem_enable <= 1;
+        mem_rw_mode <= 1;
+        mem_func <= in[14:12];
       end
 
       // Conditional branches
       7'b1100011: begin
         alu_imm_b <= 0; // Operand B from register
-        imm_out <= {20{in[31]}, in[7], in[30:25], in[11:8], 0};
+        imm_out <= {{20{in[31]}}, in[7], in[30:25], in[11:8], 1'b0};
         r_w_src <= RW_DISABLE; // Disable register write
         bra_mode <= BRA_CMP; // Enable branching comparator
         // Registers
@@ -87,6 +124,7 @@ module InstructionController
         // Branching condition
         cmp_z <= ~in[14];
         cmp_inv <= in[12];
+        mem_enable <= 0;
       end
 
       // ALU Immediate
@@ -94,11 +132,12 @@ module InstructionController
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= in[14:12]; // ALU op
         alu_alt <= alu_op == 3'b101 ? in[30] : 0; // ALU alt
-        imm_out <= {20{in[31]}, in[31:20]}; // Get immediate
+        imm_out <= {{20{in[31]}}, in[31:20]}; // Get immediate
         bra_mode <= BRA_DISABLE; // Disable branching comparator
         r_w_src <= RW_ALU; // Enable register write
         r_s1 <= in[19:15]; // Registers
         r_d <= in[11:7];
+        mem_enable <= 0;
       end
 
       // ALU Register
@@ -111,6 +150,7 @@ module InstructionController
         r_s1 <= in[19:15]; // Registers
         r_s2 <= in[24:20];
         r_d <= in[11:7];
+        mem_enable <= 0;
       end
 
       // Unknown OPCODE exception
