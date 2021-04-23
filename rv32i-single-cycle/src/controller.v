@@ -13,9 +13,9 @@ module InstructionController
   output  logic         cmp_z,      // Comparison from Z flag or ALU output
   output  logic         cmp_inv,    // Invert comparison condition
   output  logic         bra_mode,   // Branching mode
-  output  logic         mem_rw_mode,// Branching mode
-  output  logic         mem_enable, // Branching mode
-  output  logic [2:0]   mem_func    // Branching mode
+  output  logic         mem_rw_mode,// Memory read (0) or write (1)
+  output  logic         mem_enable, // Enable memory
+  output  logic [2:0]   mem_func    // Memory function
 );
 
   // Register write sources
