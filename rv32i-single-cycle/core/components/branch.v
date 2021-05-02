@@ -8,7 +8,7 @@ module BranchController
   input   logic [31:0]  pc,
   input   logic         alu_z,      // Z flag of the ALU
   output  logic [31:0]  jmp_addr,   // Immediate output
-  output  logic         jmp_enable  // Comparison from Z flag or ALU output
+  output  logic         jmp_enable  // Set PC
 );
 
   // Branch mode
@@ -31,7 +31,7 @@ module BranchController
       end
 
       BRA_ALU: begin
-        jmp_addr <= scr_alu;
+        jmp_addr <= src_alu;
         jmp_enable <= 1;
       end
 
