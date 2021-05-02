@@ -128,7 +128,7 @@ module InstructionController
       end
 
       // ALU Immediate
-      7'b0110011: begin
+      7'b0010011: begin
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= in[14:12]; // ALU op
         alu_alt <= alu_op == 3'b101 ? in[30] : 0; // ALU alt
@@ -155,8 +155,8 @@ module InstructionController
 
       // Unknown OPCODE exception
       default: begin
-        $display("Unknown OPCODE %x", in[6:0]);
-        //$finish(1);
+        $display("Unknown OPCODE %b", in[6:0]);
+        $finish(1);
       end
     endcase
   end

@@ -14,6 +14,12 @@ module RAM
   logic [31:0] mem [0:WORDS-1];
   wire [29:0] _addr;
 
+  initial begin
+    integer i;
+    for (i=0; i < WORDS; i=i+1)
+      mem[i] = 0;
+  end
+
   assign _addr = addr[31:2];
 
   always @ (_addr or r) begin

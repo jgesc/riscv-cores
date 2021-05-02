@@ -10,6 +10,12 @@ module ROM
 
 logic [WIDTH-1:0] data [0:SIZE-1];
 
+initial begin
+  integer i;
+  for (i=0; i < SIZE; i=i+1)
+    data[i] = 0;
+end
+
 assign out = data[addr];
 
 endmodule // ROM

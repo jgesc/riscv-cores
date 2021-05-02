@@ -6,7 +6,7 @@ module SoC;
 
   /// Wiring
   // Common
-  wire clk;
+  logic clk = 0;
 
   // ROM
   wire [29:0] rom_addr;
@@ -24,10 +24,18 @@ module SoC;
   Core core (.clk(clk), .rom_in(rom_out), .ram_in(ram_out), .ram_r(ram_r),
     .ram_w(ram_w), .rom_addr(rom_addr), .ram_out(ram_in), .ram_addr(ram_addr));
 
+  /// Clock
+  initial begin
+    integer i;
+    for(i = 0; i < 10; i++) begin
+      #10 clk = ~clk;
+    end
+ end
+
   /// Simulation
   initial begin
-    $readmemh("IMAGE", rom.data);
-
+    $readmemb("test.hex", rom.data);
+    $monitor(" %x", core.regs.r[1]);
   end
 
 

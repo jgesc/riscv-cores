@@ -11,7 +11,7 @@ module ProgramCounter
 );
 
   // PC Memory
-  logic [WIDTH-1:0] pc;
+  logic [WIDTH-1:0] pc = 0;
 
   // Positive clock edge
   always @ ( posedge clk ) begin

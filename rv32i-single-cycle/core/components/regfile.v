@@ -18,6 +18,13 @@ module RegisterFile
   logic [WIDTH-1:0] r [0:REGNO-1];
   initial r[0] = 0;
 
+  // Initialize to 0
+  initial begin
+    integer i;
+    for (i=0; i < REGNO; i=i+1)
+      r[i] = 0;
+  end
+
   // Memory output
   always @ ( r_addr_1 ) begin
     out_1 <= r[r_addr_1];
