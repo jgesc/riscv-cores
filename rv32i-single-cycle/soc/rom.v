@@ -4,7 +4,7 @@ module ROM
   parameter  WIDTH = 32
 )
 (
-  input   [WIDTH-1:0] addr,
+  input   [WIDTH-3:0] addr,
   output  [WIDTH-1:0] out
 );
 

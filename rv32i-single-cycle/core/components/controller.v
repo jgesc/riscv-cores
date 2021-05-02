@@ -155,8 +155,8 @@ module InstructionController
 
       // Unknown OPCODE exception
       default: begin
-        $display("Unknown OPCODE, aborting");
-        $finish(1);
+        $display("Unknown OPCODE %x", in[6:0]);
+        //$finish(1);
       end
     endcase
   end
