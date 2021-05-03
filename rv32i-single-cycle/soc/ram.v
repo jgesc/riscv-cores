@@ -20,7 +20,7 @@ module RAM
       mem[i] = 0;
   end
 
-  assign _addr = {2'b0, addr[30:2]};  // Most significant bit ignored so ROM and
+  assign _addr = {2'b0, addr[29:2]};  // Most significant bit ignored so ROM and
                                       // RAM can have different address spaces
 
   always @ (_addr or r) begin

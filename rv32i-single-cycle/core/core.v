@@ -30,8 +30,7 @@ module Core
   wire clk;
 
   // PC
-  wire [31:0] pc_jmp_addr;
-  wire [29:0] pc_out, pc_nout;
+  wire [29:0] pc_out, pc_nout, pc_jmp_addr;
   wire pc_set;
 
   // Register file
@@ -52,7 +51,6 @@ module Core
   wire mem_rw_mode, mem_enable;
 
   // Branch controller
-  wire [31:0] bra_src_imm;
   wire [1:0] bra_mode;
   wire bra_jmp_enable, bra_cmp_inv, bra_cmp_z;
 
@@ -78,8 +76,8 @@ module Core
     .mem_addr(ram_addr));
 
   BranchController bra (.cmp_z(bra_cmp_z), .cmp_inv(bra_cmp_inv),
-      .bra_mode(bra_mode), .src_alu(alu_out), .src_imm(bra_src_imm),
-    .pc({pc_out, 2'b00}), .alu_z(alu_z), .jmp_addr(pc_jmp_addr),
+      .bra_mode(bra_mode), .src_alu(alu_out), .src_imm(inst_imm_out),
+    .pc({pc_out}), .alu_z(alu_z), .jmp_addr(pc_jmp_addr),
     .jmp_enable(pc_set));
 
   InstructionController inst (.in(inst_in), .r_s1(reg_r_addr_1),

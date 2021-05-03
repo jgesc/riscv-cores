@@ -10,3 +10,4 @@ test:
 	riscv64-unknown-elf-objcopy -O verilog --verilog-data-width 4 \
 		--reverse-bytes 4 --only-section .rodata a.out rodata.hex
 	sed -i '1d' text.hex
+	sed -i '1d' rodata.hex

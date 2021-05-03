@@ -5,9 +5,9 @@ module BranchController
   input   logic [1:0]   bra_mode,   // Branching mode
   input   logic [31:0]  src_alu,
   input   logic [31:0]  src_imm,
-  input   logic [31:0]  pc,
+  input   logic [29:0]  pc,
   input   logic         alu_z,      // Z flag of the ALU
-  output  logic [31:0]  jmp_addr,   // Immediate output
+  output  logic [29:0]  jmp_addr,   // Immediate output
   output  logic         jmp_enable  // Set PC
 );
 
@@ -21,7 +21,7 @@ module BranchController
     case (bra_mode)
 
       BRA_JMP: begin
-        jmp_addr <= pc + src_imm;
+        jmp_addr <= pc + {src_imm >> 2};
         jmp_enable <= 1;
       end
 

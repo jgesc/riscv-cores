@@ -63,14 +63,14 @@ module InstructionController
 
       // Jump and link
       7'b1101111: begin
-        imm_out <= {{11{in[31]}}, in[19:12], in[20], in[30:25], in[24:21], 1'b0};
+        imm_out <= {{12{in[31]}}, in[19:12], in[20], in[30:25], in[24:21], 1'b0};
         r_w_src <= RW_PC; // Write from PC'
         r_d <= in[11:7];
         bra_mode <= BRA_JMP;
         mem_enable <= 0;
       end
 
-      // Jump and link relative
+      // Jump and link register
       7'b1100111: begin
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= in[14:12]; // ALU op
