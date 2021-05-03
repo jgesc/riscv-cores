@@ -15,7 +15,8 @@ module InstructionController
   output  logic         bra_mode,   // Branching mode
   output  logic         mem_rw_mode,// Memory read (0) or write (1)
   output  logic         mem_enable, // Enable memory
-  output  logic [2:0]   mem_func    // Memory function
+  output  logic [2:0]   mem_func,   // Memory function
+  output  logic         brk         // Debug BREAK pin
 );
 
   // Register write sources
@@ -151,6 +152,11 @@ module InstructionController
         r_s2 <= in[24:20];
         r_d <= in[11:7];
         mem_enable <= 0;
+      end
+
+      // EBREAK
+      7'b1110011: begin
+        brk <= (in == 32'b00000000000100000000000001110011);
       end
 
       // Unknown OPCODE exception

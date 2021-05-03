@@ -1,6 +1,6 @@
 module RAM
 #(
-  parameter integer WORDS = 128
+  parameter integer WORDS = 4096
 )
 (
   input                   clk,
@@ -20,7 +20,8 @@ module RAM
       mem[i] = 0;
   end
 
-  assign _addr = addr[31:2];
+  assign _addr = {2'b0, addr[30:2]};  // Most significant bit ignored so ROM and
+                                      // RAM can have different address spaces
 
   always @ (_addr or r) begin
     if(r) out <= mem[_addr];

@@ -10,6 +10,7 @@ module Core
   input           clk,
   input   [31:0]  rom_in,
   input   [31:0]  ram_in,
+  output          brk,
   output          ram_r,
   output  [3:0]   ram_w,
   output  [29:0]  rom_addr,
@@ -85,7 +86,7 @@ module Core
     .alu_imm_b(inst_alu_imm_b), .alu_pc_a(inst_alu_pc_a), .alu_op(alu_op),
     .alu_alt(alu_alt), .imm_out(inst_imm_out), .cmp_z(bra_cmp_z),
     .cmp_inv(bra_cmp_inv), .bra_mode(bra_mode), .mem_rw_mode(mem_rw_mode),
-    .mem_enable(mem_enable), .mem_func(mem_func));
+    .mem_enable(mem_enable), .mem_func(mem_func), .brk(brk));
 
   /// Multiplexers
   // Register write source
