@@ -2,7 +2,7 @@ module BranchController
 (
   input   logic         cmp_z,      // Comparison from Z flag or ALU output
   input   logic         cmp_inv,    // Invert comparison condition
-  input   logic         bra_mode,   // Branching mode
+  input   logic [1:0]   bra_mode,   // Branching mode
   input   logic [31:0]  src_alu,
   input   logic [31:0]  src_imm,
   input   logic [31:0]  pc,

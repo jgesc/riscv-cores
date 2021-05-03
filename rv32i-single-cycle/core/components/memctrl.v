@@ -43,7 +43,7 @@ always @* begin
         end
 
         default: begin
-          $display("Unknown MEM FUNC3, aborting");
+          $display("Unknown MEM FUNC3 %b, aborting", mem_func);
           $finish(1);
         end
 
@@ -69,7 +69,7 @@ always @* begin
         end
 
         default: begin
-          $display("Unknown MEM FUNC3, aborting");
+          $display("Unknown MEM FUNC3 %b, aborting", mem_func);
           $finish(1);
         end
 

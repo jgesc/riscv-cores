@@ -1,6 +1,6 @@
 module ROM
 #(
-  parameter  SIZE  = 8192,
+  parameter  WORDS  = 64,
   parameter  WIDTH = 32
 )
 (
@@ -8,14 +8,15 @@ module ROM
   output  [WIDTH-1:0] out
 );
 
-logic [WIDTH-1:0] data [0:SIZE-1];
+logic [WIDTH-1:0] data [0:WORDS-1];
 
 initial begin
   integer i;
-  for (i=0; i < SIZE; i=i+1)
+  for (i=0; i < WORDS; i=i+1)
     data[i] = 0;
 end
 
-assign out = data[addr];
+assign out = data[{1'b0, addr[WIDTH-4:0]}]; // Most significant bit ignored so ROM and
+                                            // RAM can have different address spaces
 
 endmodule // ROM

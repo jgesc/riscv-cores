@@ -1,6 +1,6 @@
 module RAM
 #(
-  parameter integer WORDS = 4096
+  parameter integer WORDS = 32
 )
 (
   input                   clk,

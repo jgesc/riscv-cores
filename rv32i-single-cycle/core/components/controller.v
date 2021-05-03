@@ -12,7 +12,7 @@ module InstructionController
   output  logic [31:0]  imm_out,    // Immediate output
   output  logic         cmp_z,      // Comparison from Z flag or ALU output
   output  logic         cmp_inv,    // Invert comparison condition
-  output  logic         bra_mode,   // Branching mode
+  output  logic [1:0]   bra_mode,   // Branching mode
   output  logic         mem_rw_mode,// Memory read (0) or write (1)
   output  logic         mem_enable, // Enable memory
   output  logic [2:0]   mem_func,   // Memory function
@@ -39,7 +39,7 @@ module InstructionController
     case (in[6:0]) // Get OPCODE
 
       // Load upper immediate
-      7'b1101111: begin
+      7'b0110111: begin
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= 3'b000; // ALU op
         alu_alt <= 0; // ALU alt
@@ -146,7 +146,7 @@ module InstructionController
         alu_imm_b <= 0; // Operand B from register
         alu_op <= in[14:12]; // ALU op
         alu_alt <= in[30]; // ALU alt
-        bra_mode <= 0; // Disable branching comparator
+        bra_mode <= BRA_DISABLE; // Disable branching comparator
         r_w_src <= RW_ALU; // Enable register write
         r_s1 <= in[19:15]; // Registers
         r_s2 <= in[24:20];

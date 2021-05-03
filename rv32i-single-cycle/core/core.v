@@ -53,7 +53,8 @@ module Core
 
   // Branch controller
   wire [31:0] bra_src_imm;
-  wire bra_mode, bra_jmp_enable, bra_cmp_inv, bra_cmp_z;
+  wire [1:0] bra_mode;
+  wire bra_jmp_enable, bra_cmp_inv, bra_cmp_z;
 
   // Instruction controller
   wire [31:0] inst_in, inst_imm_out;
@@ -77,7 +78,7 @@ module Core
     .mem_addr(ram_addr));
 
   BranchController bra (.cmp_z(bra_cmp_z), .cmp_inv(bra_cmp_inv),
-    .bra_mode(bra_mode), .src_alu(alu_out), .src_imm(bra_src_imm),
+      .bra_mode(bra_mode), .src_alu(alu_out), .src_imm(bra_src_imm),
     .pc({pc_out, 2'b00}), .alu_z(alu_z), .jmp_addr(pc_jmp_addr),
     .jmp_enable(pc_set));
 
