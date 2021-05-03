@@ -71,13 +71,13 @@ module Core
     .out(alu_out), .c(alu_c), .zero(alu_zero));
 
   MemoryController mem (.mem_rw_mode(mem_rw_mode), .mem_enable(mem_enable),
-    .mem_func(mem_func), .addr_in(alu_out), .mem_dr(ram_in),
+    .mem_func(mem_func), .addr_in(alu_out), .mem_dr(ram_in), .data_in(reg_out_1),
     .data_out(mem_data_out), .mem_dw(ram_out), .mem_r(ram_r), .mem_w(ram_w),
     .mem_addr(ram_addr));
 
   BranchController bra (.cmp_z(bra_cmp_z), .cmp_inv(bra_cmp_inv),
       .bra_mode(bra_mode), .src_alu(alu_out), .src_imm(inst_imm_out),
-    .pc({pc_out}), .alu_z(alu_z), .jmp_addr(pc_jmp_addr),
+    .pc({pc_out}), .alu_z(alu_zero), .jmp_addr(pc_jmp_addr),
     .jmp_enable(pc_set));
 
   InstructionController inst (.in(inst_in), .r_s1(reg_r_addr_1),

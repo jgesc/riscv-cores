@@ -57,8 +57,10 @@ module InstructionController
         alu_op <= 3'b000; // ALU op
         alu_alt <= 0; // ALU alt
         imm_out <= {in[31:12], 12'b0}; // Get immediate
-        bra_mode <= BRA_ALU; // Disable branching comparator
+        bra_mode <= BRA_DISABLE; // Disable branching comparator
         mem_enable <= 0;
+        r_w_src <= RW_ALU; // Enable register write
+        r_d <= in[11:7];
       end
 
       // Jump and link

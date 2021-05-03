@@ -76,6 +76,9 @@ always @* begin
       endcase
 
     end
+  end else begin
+    mem_r = 0;
+    mem_w = 0;
   end
 end
 

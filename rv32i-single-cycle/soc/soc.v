@@ -46,14 +46,13 @@ module SoC
   end
 
   initial begin
-    int i;
     if ($value$plusargs ("ROMIMG=%s", romimg)) begin
       $readmemh(romimg, rom.data);
     end
     if ($value$plusargs ("RAMIMG=%s", ramimg))
       $readmemh(ramimg, ram.mem);
     //$readmemh("test.hex", rom.data);
-    $monitor("%x", rom.addr);
+    $monitor("%x", core.pc.pc);
 
     forever begin
       #10 clk = ~clk;
