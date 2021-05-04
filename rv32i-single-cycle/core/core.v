@@ -94,7 +94,7 @@ module Core
     case (inst_r_w_src)
       RW_ALU: reg_in <= alu_out;
       RW_MEM: reg_in <= mem_data_out;
-      RW_PC: reg_in <= pc_out;
+      RW_PC: reg_in <= pc_nout;
     endcase
   end
 

@@ -79,7 +79,7 @@ module InstructionController
         alu_alt <= 0; // ALU alt
         imm_out <= {{20{in[31]}}, in[31:20]};
         bra_mode <= BRA_ALU; // Jump to result from ALU
-        r_w_src <= RW_ALU; // Enable register write
+        r_w_src <= RW_PC; // Enable register write
         r_s1 <= in[19:15]; // Registers
         r_d <= in[11:7];
         mem_enable <= 0;
