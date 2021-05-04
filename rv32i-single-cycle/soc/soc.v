@@ -52,7 +52,9 @@ module SoC
     if ($value$plusargs ("RAMIMG=%s", ramimg))
       $readmemh(ramimg, ram.mem);
     //$readmemh("test.hex", rom.data);
-    $monitor("%x", core.pc.pc);
+    //$monitor("%x %x", core.pc.pc, core.regs.r[2]);
+    $monitor("%x RAM %x", core.pc.pc, ram_in);
+    //$monitor("%x ALU %x (%b) %x = %x", core.pc.pc, core.alu_in_a, core.alu_op, core.alu_in_b, core.alu_out);
 
     forever begin
       #10 clk = ~clk;

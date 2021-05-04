@@ -26,7 +26,7 @@ module BranchController
       end
 
       BRA_CMP: begin
-        jmp_addr <= pc + src_imm;
+        jmp_addr <= pc + {src_imm >> 2};
         jmp_enable <= (cmp_z ? alu_z : src_imm) ^ cmp_inv;
       end
 

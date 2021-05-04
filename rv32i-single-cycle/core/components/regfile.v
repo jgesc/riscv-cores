@@ -26,16 +26,16 @@ module RegisterFile
   end
 
   // Memory output
-  always @ ( r_addr_1 ) begin
+  always @ ( r_addr_1 or clk ) begin
     out_1 <= r[r_addr_1];
   end
-  always @ ( r_addr_2 ) begin
+  always @ ( r_addr_2 or clk ) begin
     out_2 <= r[r_addr_2];
   end
 
   // Write to register
   always @ ( negedge clk ) begin
-    if(we && w_addr != 0)
+    if(we && (w_addr != 0))
       r[w_addr] <= in;
   end
 

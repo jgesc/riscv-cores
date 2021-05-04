@@ -71,7 +71,7 @@ module Core
     .out(alu_out), .c(alu_c), .zero(alu_zero));
 
   MemoryController mem (.mem_rw_mode(mem_rw_mode), .mem_enable(mem_enable),
-    .mem_func(mem_func), .addr_in(alu_out), .mem_dr(ram_in), .data_in(reg_out_1),
+    .mem_func(mem_func), .addr_in(alu_out), .mem_dr(ram_in), .data_in(reg_out_2),
     .data_out(mem_data_out), .mem_dw(ram_out), .mem_r(ram_r), .mem_w(ram_w),
     .mem_addr(ram_addr));
 
