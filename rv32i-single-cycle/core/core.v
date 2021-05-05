@@ -99,7 +99,7 @@ module Core
   end
 
   // ALU operand A
-  assign alu_in_a = inst_alu_pc_a ? pc_out : reg_out_1;
+  assign alu_in_a = inst_alu_pc_a ? (pc_out << 2) : reg_out_1;
 
   // ALU operand B
   assign alu_in_b = inst_alu_imm_b ? inst_imm_out : reg_out_2;
