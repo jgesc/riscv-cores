@@ -10,7 +10,7 @@ module InstructionController
   output  logic [2:0]   alu_op,     // ALU operation to use
   output  logic         alu_alt,    // ALU alternate operation mode
   output  logic [31:0]  imm_out,    // Immediate output
-  output  logic         cmp_z,      // Comparison from Z flag or ALU output
+  output  logic [1:0]   cmp_src,    // Comparison source
   output  logic         cmp_inv,    // Invert comparison condition
   output  logic [1:0]   bra_mode,   // Branching mode
   output  logic         mem_rw_mode,// Memory read (0) or write (1)
@@ -30,6 +30,11 @@ module InstructionController
   localparam [1:0] BRA_JMP = 2'b01;     // Inconditional branch
   localparam [1:0] BRA_CMP = 2'b10;     // Conditional branch
   localparam [1:0] BRA_ALU = 2'b11;     // Inconditional branch to ALU address
+
+  // Comparison source
+  localparam [1:0] CMP_Z    = 2'b00;
+  localparam [1:0] CMP_ALU  = 2'b10;
+  localparam [1:0] CMP_C    = 2'b11;
 
 
   always @ ( in ) begin
@@ -127,8 +132,9 @@ module InstructionController
         r_s1 <= in[19:15];
         r_s2 <= in[24:20];
         // Branching condition
-        cmp_z <= ~in[14];
-        cmp_inv <= ~in[12];
+        cmp_src <= in[14:13];
+        cmp_inv <= in[12];
+
         mem_enable <= 0;
       end
 

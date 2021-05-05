@@ -53,8 +53,10 @@ module SoC
       $readmemh(ramimg, ram.mem);
     //$readmemh("test.hex", rom.data);
     //$monitor("%x %x", core.pc.pc, core.regs.r[2]);
-    $monitor("%x RAM %x", core.pc.pc, ram_in);
+    //$monitor("%x RAM %x", core.pc.pc, ram_in);
+    //$monitor("%x BRA %x (%b) %x = %b", core.pc.pc, core.alu_in_a, core.inst.in[14:12], core.alu_in_b, core.pc_set);
     //$monitor("%x ALU %x (%b) %x = %x", core.pc.pc, core.alu_in_a, core.alu_op, core.alu_in_b, core.alu_out);
+    $monitor("%x x1 %x", core.pc.pc, core.regs.r[1]);
 
     forever begin
       #10 clk = ~clk;

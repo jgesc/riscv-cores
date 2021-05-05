@@ -51,8 +51,8 @@ module Core
   wire mem_rw_mode, mem_enable;
 
   // Branch controller
-  wire [1:0] bra_mode;
-  wire bra_jmp_enable, bra_cmp_inv, bra_cmp_z;
+  wire [1:0] bra_mode, bra_cmp_src;
+  wire bra_jmp_enable, bra_cmp_inv;
 
   // Instruction controller
   wire [31:0] inst_in, inst_imm_out;
@@ -75,15 +75,15 @@ module Core
     .data_out(mem_data_out), .mem_dw(ram_out), .mem_r(ram_r), .mem_w(ram_w),
     .mem_addr(ram_addr));
 
-  BranchController bra (.cmp_z(bra_cmp_z), .cmp_inv(bra_cmp_inv),
+  BranchController bra (.cmp_src(bra_cmp_src), .cmp_inv(bra_cmp_inv),
       .bra_mode(bra_mode), .src_alu(alu_out), .src_imm(inst_imm_out),
-    .pc({pc_out}), .alu_z(alu_zero), .jmp_addr(pc_jmp_addr),
+    .pc({pc_out}), .alu_z(alu_zero), .alu_c(alu_c), .jmp_addr(pc_jmp_addr),
     .jmp_enable(pc_set));
 
   InstructionController inst (.in(inst_in), .r_s1(reg_r_addr_1),
     .r_s2(reg_r_addr_2), .r_d(reg_w_addr), .r_w_src(inst_r_w_src),
     .alu_imm_b(inst_alu_imm_b), .alu_pc_a(inst_alu_pc_a), .alu_op(alu_op),
-    .alu_alt(alu_alt), .imm_out(inst_imm_out), .cmp_z(bra_cmp_z),
+    .alu_alt(alu_alt), .imm_out(inst_imm_out), .cmp_src(bra_cmp_src),
     .cmp_inv(bra_cmp_inv), .bra_mode(bra_mode), .mem_rw_mode(mem_rw_mode),
     .mem_enable(mem_enable), .mem_func(mem_func), .brk(brk));
 
