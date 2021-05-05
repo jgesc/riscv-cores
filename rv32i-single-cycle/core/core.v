@@ -90,7 +90,7 @@ module Core
   /// Multiplexers
   // Register write source
   always @(inst_r_w_src or alu_out or mem_data_out or pc_out) begin
-    reg_we = !RW_DISABLE;
+    reg_we = inst_r_w_src != RW_DISABLE;
     case (inst_r_w_src)
       RW_ALU: reg_in <= alu_out;
       RW_MEM: reg_in <= mem_data_out;

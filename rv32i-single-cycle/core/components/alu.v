@@ -37,6 +37,6 @@ module ALU
   end
 
   // Zero flag
-  assign zero = |out;
+  assign zero = !(|out);
 
 endmodule
