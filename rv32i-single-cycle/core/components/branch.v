@@ -45,7 +45,7 @@ module BranchController
       end
 
       BRA_ALU: begin
-        jmp_addr <= src_alu;
+        jmp_addr <= {src_alu >> 2};
         jmp_enable <= 1;
       end
 
