@@ -7,8 +7,12 @@ module ProgramCounter
   input   logic             set,
   input   logic             clk,
   output  logic [WIDTH-1:0] out,
-  output  logic [WIDTH-1:0] n_pc
+  output  logic [WIDTH-1:0] n_pc_out
 );
+
+  logic [WIDTH-1:0] n_pc;
+
+  assign n_pc_out = n_pc << 2;
 
   // PC Memory
   logic [WIDTH-1:0] pc = 0;

@@ -61,7 +61,7 @@ module Core
 
   /// Components
   ProgramCounter pc (.jmp_addr(pc_jmp_addr[29:0]), .set(pc_set), .clk(clk),
-    .out(pc_out), .n_pc(pc_nout));
+    .out(pc_out), .n_pc_out(pc_nout));
 
   RegisterFile regs (.r_addr_1(reg_r_addr_1), .r_addr_2(reg_r_addr_2),
     .w_addr(reg_w_addr), .in(reg_in), .we(reg_we), .clk(clk), .out_1(reg_out_1),
