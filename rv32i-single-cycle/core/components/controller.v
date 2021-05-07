@@ -142,7 +142,7 @@ module InstructionController
       7'b0010011: begin
         alu_imm_b <= 1; // Operand B from immediate
         alu_op <= in[14:12]; // ALU op
-        alu_alt <= alu_op == 3'b101 ? in[30] : 0; // ALU alt
+        alu_alt <= (in[14:12] == 3'b101) ? in[30] : 0; // ALU alt
         imm_out <= {{20{in[31]}}, in[31:20]}; // Get immediate
         bra_mode <= BRA_DISABLE; // Disable branching comparator
         r_w_src <= RW_ALU; // Enable register write
