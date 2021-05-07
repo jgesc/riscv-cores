@@ -4,8 +4,8 @@
 
 module SoC
 #(
-    parameter integer ROM_SIZE = 4096,
-    parameter integer RAM_SIZE = 4096
+    parameter integer ROM_SIZE = 8192,    // 32 KB
+    parameter integer RAM_SIZE = 4194304  // 16 MB
 );
 
   /// Wiring
@@ -46,6 +46,24 @@ module SoC
     //$stop(0);
   end
 
+  always @(negedge clk) begin
+    if(core.regs.r[2] > RAM_SIZE) begin
+      $display("STACK_POINTER_VIOLATION (%d)", core.regs.r[2]);
+      $finish(0);
+    end
+    if(ram._addr > RAM_SIZE) begin
+      $display("RAM_ACCESS_VIOLATION (%d)", ram._addr);
+      $finish(0);
+    end
+  end
+
+  always @ core.pc.out begin
+    //$display("PC = %x", core.pc.out << 2);
+    if((($time - 10) % 2000000) == 0) begin
+      $display($time / 20, " clocks");
+    end
+  end
+
   initial begin
     // Parse comments
     if ($value$plusargs ("ROMIMG=%s", romimg))
@@ -59,9 +77,6 @@ module SoC
     end
     if ($value$plusargs ("RAMIMG=%s", ramimg))
       $readmemh(ramimg, ram.mem);
-
-    // Print PC trace
-    //$monitor("PC = %x", core.pc.pc);
 
     // Clock
     forever begin

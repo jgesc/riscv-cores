@@ -29,12 +29,14 @@ module RAM
   end
 
   always @ (negedge clk) begin
-    v = mem[_addr];
-    if(w[0]) v[7:0] = in[7:0];
-    if(w[1]) v[15:8] = in[15:8];
-    if(w[2]) v[23:16] = in[23:16];
-    if(w[3]) v[31:24] = in[31:24];
-    mem[_addr] = v;
+    if(w) begin
+      v = mem[_addr];
+      if(w[0]) v[7:0] = in[7:0];
+      if(w[1]) v[15:8] = in[15:8];
+      if(w[2]) v[23:16] = in[23:16];
+      if(w[3]) v[31:24] = in[31:24];
+      mem[_addr] = v;
+    end
   end
 
 endmodule
