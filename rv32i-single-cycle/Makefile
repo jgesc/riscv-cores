@@ -1,6 +1,7 @@
 RISCV_GCC = riscv64-unknown-elf-gcc
 RISCV_OBJCOPY = riscv64-unknown-elf-objcopy
 RISCV_LIBGCC = /usr/lib/gcc/riscv64-unknown-elf/9.3.0/rv32i/ilp32/libgcc.a
+GCC_FLAGS = -Wno-builtin-declaration-mismatch
 
 .PHONY: build-soc
 build-soc:
@@ -10,7 +11,7 @@ build-soc:
 build-test:
 	# Compile test program
 	$(RISCV_GCC) -nostartfiles -nostdlib  -march=rv32i -mabi=ilp32 \
-		-T test/custom.ld test/*.c $(RISCV_LIBGCC)
+		-T test/custom.ld $(GCC_FLAGS) test/*.c $(RISCV_LIBGCC)
 	# Extract ROM and RAM images
 	$(RISCV_OBJCOPY) -O verilog --verilog-data-width 4 \
 		--reverse-bytes 4 --only-section .text a.out text.hex

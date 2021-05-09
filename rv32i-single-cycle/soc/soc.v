@@ -37,7 +37,7 @@ module SoC
 
   // Check for breakpoint
   always @(posedge brk) begin
-    $display("\nBreak point @ ", $time / 20, " clocks");
+    $display("\nBreak point @ ", $time / 20, " clocks on PC = %x", core.pc.out << 2);
 
     if ($value$plusargs ("MEMDUMP=%s", memdump))
       $writememh(memdump, ram.mem);

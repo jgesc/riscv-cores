@@ -2,8 +2,17 @@
 #include "sphere.h"
 #include "vec3f.h"
 
-#define HEIGHT 16
-#define WIDTH 16
+#define HEIGHT 128
+#define WIDTH 128
+
+#define N_SPHERES 4
+#define R_SEED 373
+#define R_MULT 1753
+
+#define LIGHT_DIFUSE 0.2
+#define MIRROR_MULT 0.8
+
+//#define ENABLE_ADVANCED
 
 // top of stack
 extern unsigned __stacktop;
@@ -12,25 +21,83 @@ __asm__("addi	sp,zero,1");
 __asm__("slli	sp,sp,22");
 __asm__("call main");
 
-vec3f cast_ray(vec3f* o, vec3f* d, Sphere* sphere) {
-  float dist = 10000.0;
-  if (!sphere_intersect(sphere, o, d, &dist)) {
-      vec3f r = {0.2, 0.7, 0.8};
-      return r;
+vec3f cast_ray(vec3f* o, vec3f* d, Sphere* spheres, int nspheres, vec3f* light, int mirror)
+{
+  float mindist = 10000.0;
+  vec3f pixcol = {0.2, 0.7, 0.8};
+
+  float curdist;
+  int i;
+  for(i = 0; i < nspheres; i++)
+  {
+	  if (sphere_intersect(spheres+i, o, d, &curdist))
+	  {
+		  if(curdist < mindist)
+      {
+  			mindist = curdist;
+
+  			vec3f tmp = vec3f_mults(d, curdist);
+  			vec3f hit = vec3f_add(o, &tmp);
+  			vec3f normal = vec3f_sub(&hit, &spheres[i].c);
+  			vec3f_normalizei(&normal);
+
+  			vec3f lightdir = vec3f_sub(light, &hit);
+  			vec3f_normalizei(&lightdir);
+
+#ifdef ENABLE_ADVANCED
+  			if(i != mirror)
+  			{
+  				int j;
+  				float _;
+  				int shadow = 0;
+  				for(j = 0; j < nspheres; j++)
+  				{
+  					if(j == i) continue;
+  					if(sphere_intersect(spheres+j, &hit, &lightdir, &_))
+  					{
+  						shadow = 1;
+  						break;
+  					}
+  				}
+
+  				if(shadow)
+  				{
+  					pixcol = vec3f_mults(&spheres[i].col, LIGHT_DIFUSE);
+  				}
+  				else
+  				{
+  					float lightmag = vec3f_dot(&lightdir, &normal);
+  					float lighti = LIGHT_DIFUSE + (1-LIGHT_DIFUSE) * (lightmag < 0 ? 0 : lightmag);
+
+  					pixcol = vec3f_mults(&spheres[i].col, lighti);
+  				}
+  			}
+  			else
+  			{
+  				pixcol = cast_ray(&hit, &normal, spheres, nspheres-1, light, -1);
+  				vec3f_multsi(&pixcol, MIRROR_MULT);
+  			}
+#endif
+
+        float lightmag = vec3f_dot(&lightdir, &normal);
+        float lighti = LIGHT_DIFUSE + (1-LIGHT_DIFUSE) * (lightmag < 0 ? 0 : lightmag);
+        pixcol = vec3f_mults(&spheres[i].col, lighti);
+		  }
+	  }
   }
-  vec3f r = {0.4, 0.4, 0.3};
-  return r;
+
+  return pixcol;
 }
 
-void render(Sphere* sphere)
+void render(Sphere* spheres, int nspheres, vec3f* light, int mirror)
 {
-  float fov = 1.48;
+  float fov = 1.48 / 2;
 
   vec3f framebuffer[HEIGHT * WIDTH];
 
   vec3f o = {0};
 
-  float tan_fov = tan(fov/2.);
+  float tan_fov = tan(fov);
 
   int i, j;
   for (j = 0; j<HEIGHT; j++)
@@ -43,7 +110,7 @@ void render(Sphere* sphere)
       vec3f dir = {x, y, -1};
       vec3f_normalizei(&dir);
 
-      framebuffer[i+j*WIDTH] = cast_ray(&o, &dir, sphere);
+      framebuffer[i+j*WIDTH] = cast_ray(&o, &dir, spheres, nspheres, light, mirror);
     }
   }
 
@@ -51,10 +118,28 @@ void render(Sphere* sphere)
   for(i = 0; i < WIDTH * HEIGHT; i++) result[i] = framebuffer[i];
 }
 
-int main(void) {
-  Sphere sphere = sphere_new(vec3f_new(-3, 0, -16), 2);
+unsigned char rnd()
+{
+	static unsigned int _rnd = R_SEED;
+	_rnd *= R_MULT;
+	return _rnd;
+}
 
-  render(&sphere);
+int main(void) {
+  Sphere spheres[N_SPHERES];
+
+  int i;
+  for(i = 0; i < N_SPHERES-1; i++)
+  {
+	spheres[i] = sphere_new(
+		vec3f_new(0 + rnd()/32 - 4, 0 + rnd()/32 - 4, -8 - rnd() / 32),
+		1 + rnd() / 128,
+		vec3f_new(rnd(), rnd(), rnd()));
+	vec3f_normalizei(&spheres[i].col);
+  }
+  spheres[N_SPHERES-1] = sphere_new(vec3f_new(10, 12, -20), 12, vec3f_new(0.4,0.4,0.2));
+  vec3f lightpos = {6, 6, -6};
+  render(spheres, N_SPHERES, &lightpos, N_SPHERES-1);
 
   __asm__("ebreak");
 }

@@ -36,6 +36,12 @@ vec3f vec3f_mults(vec3f * v, float s)
   return r;
 }
 
+void vec3f_multsi(vec3f * v, float s)
+{
+  int i;
+  for(i = 0; i < 3; i++) v->v[i] = v->v[i] * s;
+}
+
 void vec3f_divsi(vec3f * v, float s)
 {
   int i;

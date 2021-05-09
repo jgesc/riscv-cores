@@ -8,8 +8,8 @@ typedef struct vec3f {
     float v[3];
     struct {
       float x, y, z;
-    }
-  }
+    };
+  };
 } vec3f;
 
 vec3f vec3f_add(vec3f * a, vec3f * b);
@@ -21,6 +21,8 @@ vec3f vec3f_sub(vec3f * a, vec3f * b);
 void vec3f_subi(vec3f * a, vec3f * b);
 
 vec3f vec3f_mults(vec3f * v, float s);
+
+void vec3f_multsi(vec3f * v, float s);
 
 void vec3f_divsi(vec3f * v, float s);
 

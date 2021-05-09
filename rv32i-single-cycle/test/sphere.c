@@ -15,7 +15,7 @@ int sphere_intersect(Sphere* sphere, vec3f* o, vec3f* dir, float * d)
   return 1;
 }
 
-Sphere sphere_new(vec3f c, float r)
+Sphere sphere_new(vec3f c, float r, vec3f col)
 {
   Sphere sphere;
 
@@ -23,6 +23,7 @@ Sphere sphere_new(vec3f c, float r)
   sphere.c.y = c.y;
   sphere.c.z = c.z;
   sphere.r = r;
+  sphere.col = col;
 
   return sphere;
 }
