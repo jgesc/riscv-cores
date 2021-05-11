@@ -4,6 +4,8 @@ First attempt at programming a RISC-V single cycle core in Verilog.
 
 This core implements the RV32I instruction set.
 
+![Architecture diagram](res/diag/RV32I-Single-Core.png)
+
 
 ## Requirements
  * Icarus Verilog with SystemVerilog (IEEE1800-2012) support (version 11.0 and above) for compiling the core.
@@ -13,7 +15,9 @@ This core implements the RV32I instruction set.
 ## Testing
 `make test` to build the core and testing program and run it on the core.
 
-The test program is a simple ray-casting render that renders an sphere.
+The test program is a simple ray-casting render that renders some spheres.
+It can also render shadows and reflections, but it is disabled by default as
+it may take several hours to render.
 
 
 ## Results

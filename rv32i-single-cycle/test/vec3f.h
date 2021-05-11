@@ -3,12 +3,10 @@
 
 #include "math.h"
 
-typedef struct vec3f {
-  union {
-    float v[3];
-    struct {
-      float x, y, z;
-    };
+typedef union {
+  float v[3];
+  struct {
+    float x, y, z;
   };
 } vec3f;
 

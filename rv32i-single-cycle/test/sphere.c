@@ -19,9 +19,7 @@ Sphere sphere_new(vec3f c, float r, vec3f col)
 {
   Sphere sphere;
 
-  sphere.c.x = c.x;
-  sphere.c.y = c.y;
-  sphere.c.z = c.z;
+  sphere.c = c;
   sphere.r = r;
   sphere.col = col;
 

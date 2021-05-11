@@ -2,8 +2,8 @@ import struct
 import numpy as np
 from matplotlib import pyplot as plt
 
-HEIGHT = 32
-WIDTH = 32
+HEIGHT = 8
+WIDTH = 8
 
 values = []
 

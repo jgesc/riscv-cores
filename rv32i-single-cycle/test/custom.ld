@@ -16,6 +16,7 @@ SECTIONS {
     .rodata ALIGN(4) : {
       *(.rodata)         /* .rodata sections (constants, strings, etc.) */
       *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
+      *(.sdata)
       . = ALIGN(4);
     } >RAM
 
