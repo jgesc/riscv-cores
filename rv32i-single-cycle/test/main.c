@@ -2,8 +2,8 @@
 #include "sphere.h"
 #include "vec3f.h"
 
-#define HEIGHT 128
-#define WIDTH 128
+#define HEIGHT 512
+#define WIDTH 512
 
 #define N_SPHERES 4
 #define R_SEED 373

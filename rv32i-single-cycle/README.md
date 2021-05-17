@@ -21,9 +21,13 @@ it may take several hours to render.
 
 
 ## Results
-The following image is the result of running the ray-tracing test program with reflections and shadows disabled. It took 257,793,914,970 clocks and 68 hours of simulation.
+The following image is the result of running the ray-tracing test program with reflections and shadows disabled. It took 12,889,695,748 clocks and 68 hours of simulation.
 
 ![512px no-mirror render](res/512_nomirror.png)
+
+With shadows and mirror image, the following image is obtained after 14,527,364,028 clocks and 77 hours of simulation.
+
+![512px mirror render](res/512_mirror.png)
 
 
 The script `res/extract_raycast_result.py` can be used to reconstruct the previous
