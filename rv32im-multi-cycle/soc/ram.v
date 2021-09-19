@@ -36,7 +36,7 @@ module RAM
       ready <= 0;
       mem_bus_output = 0;
       if (mem_w) begin
-        mem[addr] = #DELAY mem_data;
+        #1 mem[addr] = #DELAY mem_data;
       end else if (mem_r) begin
         mem_buffer = #DELAY mem[addr];
         mem_bus_output = 1;
