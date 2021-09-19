@@ -14,7 +14,8 @@ module Cache
   input   [ADDR_SIZE-1:0]         addr, // Memory address
   input   [WORD_SIZE-1:0]         data_w, // Data to write
   output  [WORD_SIZE-1:0]         data_r, // Data to read
-  output                          stall, // Stall
+  output  [ADDR_SIZE-BLOCK_OFFSET_BITS-1:0] mem_addr, // Address sent to memory
+  output logic                    stall, // Stall
   // Memory communication
   input                           ready,
   output logic                    mem_r,
@@ -41,6 +42,8 @@ module Cache
       for (j = 0; j < WORDS_PER_LINE; j=j+1)
         c_block[i][j] = 0;
     end
+    mem_w <= 0;
+    mem_r <= 0;
   end
 
 
@@ -61,7 +64,6 @@ module Cache
   assign d = c_d[addr_idx];
 
   assign data_r = c_block[addr_idx][addr_offset];
-  assign stall = !hit;
 
   assign mem_data = mem_w ? c_block[addr_idx] : 'bz;
 
@@ -69,7 +71,13 @@ module Cache
   // S0 : Ready
   // S1 : Writting to memory
   // S2 : Reading from memory
-  enum logic [1:0] {S0=2'b00, S1=2'b01, S2=2'b10} state;
+  enum logic [1:0] {S0=2'b00, S1=2'b01, S2=2'b10} state = S0;
+
+  assign mem_addr = (state == S1) ? {c_tag[addr_idx], addr_idx} : addr[ADDR_SIZE-1:BLOCK_OFFSET_BITS];
+
+  assign stall = !hit || _stall;
+  logic _stall = 0;
+  always_ff @ (posedge clk) _stall = !hit;
 
   // At clock negedge
   always_ff @ (negedge clk) begin
@@ -86,6 +94,7 @@ module Cache
         end
       // If cache-miss
       end else begin
+        _stall <= 1;
         // If block is dirty
         if (d) begin
           // Set write-back state
@@ -115,7 +124,7 @@ module Cache
         mem_r <= 0; // De-assert memory read operation
         c_d[addr_idx] <= 0; // Clean dirty bit
         c_tag[addr_idx] <= addr_tag; // Update tag
-        c_block[addr_idx][addr_offset] <= mem_data; // Store data in block
+        c_block[addr_idx] <= mem_data; // Store data in block
         state <= S0; // Set state to ready
       end
       default: ;
